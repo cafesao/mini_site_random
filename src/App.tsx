@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import invokeRandom from './invokeRandom'
 
 function App() {
@@ -9,21 +9,7 @@ function App() {
     index: 0,
   })
   const [addItem, setAddItem] = useState('')
-
-  useEffect(() => {
-    setItems([
-      'Loremipsumdolor',
-      'sitametconsectetur',
-      'adipisicingelit',
-      'sit',
-      'amet',
-      'amet',
-      'repudiandaeofficia',
-      'ipsumdolor',
-      'dolor',
-      'sitamet',
-    ])
-  }, [])
+  const [loading, setLoading] = useState(false)
 
   function handleDeleteItem(index: number) {
     const choicesMod = items.filter((_, indexArray) => index !== indexArray)
@@ -52,8 +38,10 @@ function App() {
   }
 
   async function handleInvokeRandom() {
+    setLoading(true)
     const randomNumber = await invokeRandom(items.length)
     setChoice(randomNumber)
+    setLoading(false)
   }
 
   return (
@@ -134,8 +122,24 @@ function App() {
               <tbody>
                 {items.map((value, index) => (
                   <tr>
-                    <th>{index + 1}</th>
-                    <td>{value}</td>
+                    <th
+                      className={
+                        choice === index + 1
+                          ? 'bg-green-600 text-white rounded-s-xl'
+                          : ''
+                      }
+                    >
+                      {index + 1}
+                    </th>
+                    <td
+                      className={
+                        choice === index + 1
+                          ? 'bg-green-600 text-white rounded-e-xl'
+                          : ''
+                      }
+                    >
+                      {value}
+                    </td>
                     <td>
                       <div className="flex flex-row space-x-6">
                         <label
@@ -169,12 +173,22 @@ function App() {
             Add Item
           </label>
           <div className="flex flex-row items-center justify-center space-x-2">
-            <p className="text-orange-400">Your Choice: </p>
-            <p className="text-orange-400 font-bold text-xl">{choice}</p>
+            {choice === 0 ? (
+              <></>
+            ) : (
+              <>
+                <p className="text-orange-400">Your Choice: </p>
+                <p className="text-orange-400 font-bold text-xl">{choice}</p>
+              </>
+            )}
           </div>
 
           <button
-            className="btn btn-outline btn-success"
+            className={
+              loading || items.length === 0
+                ? 'btn btn-outline btn-disabled'
+                : 'btn btn-outline btn-success'
+            }
             onClick={handleInvokeRandom}
           >
             Random Choice
