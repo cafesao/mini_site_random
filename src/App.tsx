@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { v4 as uuid } from 'uuid'
+
 import invokeRandom from './invokeRandom'
 
 function App() {
-  const [items, setItems] = useState([''])
+  const [items, setItems] = useState<string[]>([])
   const [choice, setChoice] = useState(0)
   const [selectItem, setSelectItem] = useState({
     value: '',
@@ -121,7 +123,7 @@ function App() {
               </thead>
               <tbody>
                 {items.map((value, index) => (
-                  <tr>
+                  <tr key={uuid()}>
                     <th
                       className={
                         choice === index + 1
