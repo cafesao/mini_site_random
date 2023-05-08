@@ -12,6 +12,8 @@ function App() {
   })
   const [addItem, setAddItem] = useState('')
   const [loading, setLoading] = useState(false)
+  const [openModalEdit, setOpenModalEdit] = useState(false)
+  const [openModalAdd, setOpenModalAdd] = useState(false)
 
   function handleDeleteItem(index: number) {
     const choicesMod = items.filter((_, indexArray) => index !== indexArray)
@@ -48,7 +50,12 @@ function App() {
 
   return (
     <>
-      <input type="checkbox" id="modal-add" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="modal-add"
+        className="modal-toggle"
+        checked={openModalAdd}
+      />
       <div className="modal">
         <div className="modal-box flex flex-col items-center justify-center">
           <h3 className="font-bold text-lg mb-8">Add item</h3>
@@ -61,6 +68,14 @@ function App() {
             onChange={(event) => {
               setAddItem(event.target.value)
             }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                setOpenModalAdd(false)
+                handleAddItem()
+              } else if (event.key === 'Escape') {
+                setOpenModalAdd(false)
+              }
+            }}
           />
           <div className="modal-action">
             <label
@@ -70,14 +85,23 @@ function App() {
             >
               Done
             </label>
-            <label htmlFor="modal-add" className="btn btn-error">
+            <label
+              htmlFor="modal-add"
+              className="btn btn-error"
+              onClick={() => setOpenModalAdd(false)}
+            >
               Cancel
             </label>
           </div>
         </div>
       </div>
 
-      <input type="checkbox" id="modal-edit" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="modal-edit"
+        className="modal-toggle modal-open"
+        checked={openModalEdit}
+      />
       <div className="modal">
         <div className="modal-box flex flex-col items-center justify-center">
           <h3 className="font-bold text-lg mb-8">Edit item</h3>
@@ -93,16 +117,31 @@ function App() {
                 value: event.target.value,
               })
             }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                setOpenModalEdit(false)
+                handleEditItem()
+              } else if (event.key === 'Escape') {
+                setOpenModalEdit(false)
+              }
+            }}
           />
           <div className="modal-action">
             <label
               htmlFor="modal-edit"
               className="btn btn-success"
-              onClick={handleEditItem}
+              onClick={() => {
+                setOpenModalEdit(false)
+                handleEditItem()
+              }}
             >
               Done
             </label>
-            <label htmlFor="modal-edit" className="btn btn-error">
+            <label
+              htmlFor="modal-edit"
+              className="btn btn-error"
+              onClick={() => setOpenModalEdit(false)}
+            >
               Cancel
             </label>
           </div>
@@ -147,12 +186,13 @@ function App() {
                         <label
                           htmlFor="modal-edit"
                           className="btn"
-                          onClick={() =>
+                          onClick={() => {
                             setSelectItem({
                               value,
                               index,
                             })
-                          }
+                            setOpenModalEdit(true)
+                          }}
                         >
                           Edit
                         </label>
@@ -171,7 +211,11 @@ function App() {
           </div>
         </div>
         <div className="flex flex-row items-center justify-center space-x-24 mt-10 p-4 rounded-xl">
-          <label htmlFor="modal-add" className="btn btn-outline btn-accent">
+          <label
+            htmlFor="modal-add"
+            className="btn btn-outline btn-accent"
+            onClick={() => setOpenModalAdd(true)}
+          >
             Add Item
           </label>
           <div className="flex flex-row items-center justify-center space-x-2">
