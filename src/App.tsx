@@ -81,7 +81,10 @@ function App() {
             <label
               htmlFor="modal-add"
               className="btn btn-success"
-              onClick={handleAddItem}
+              onClick={() => {
+                setOpenModalAdd(false)
+                handleAddItem()
+              }}
             >
               Done
             </label>
@@ -128,7 +131,6 @@ function App() {
           />
           <div className="modal-action">
             <label
-              htmlFor="modal-edit"
               className="btn btn-success"
               onClick={() => {
                 setOpenModalEdit(false)
@@ -138,7 +140,6 @@ function App() {
               Done
             </label>
             <label
-              htmlFor="modal-edit"
               className="btn btn-error"
               onClick={() => setOpenModalEdit(false)}
             >
@@ -150,66 +151,78 @@ function App() {
 
       <div className="flex flex-col items-center justify-center h-screen">
         <div className="flex flex-col items-center justify-center space-y-5 bg-slate-700 p-10 rounded-xl">
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              {/* head */}
-              <thead>
-                <tr>
-                  <th>Choice</th>
-                  <th>Name</th>
-                  <th>Options</th>
+          <table className="table w-full">
+            {/* head */}
+            <thead>
+              <tr>
+                <th>Choice</th>
+                <th>Name</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((value, index) => (
+                <tr key={uuid()}>
+                  <th
+                    className={
+                      choice === index + 1
+                        ? 'bg-green-600 text-white rounded-s-xl'
+                        : ''
+                    }
+                  >
+                    {index + 1}
+                  </th>
+                  <td
+                    className={
+                      choice === index + 1 ? 'bg-green-600 text-white' : ''
+                    }
+                  >
+                    {value}
+                  </td>
+                  <td
+                    className={
+                      choice === index + 1 ? 'bg-green-600 rounded-e-xl' : ''
+                    }
+                  >
+                    <div className="dropdown dropdown-right dropdown-hover">
+                      <label tabIndex={0} className="btn m-1">
+                        Hover
+                      </label>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content menu p-2 space-y-2 shadow bg-base-100 rounded-box w-52"
+                      >
+                        <li>
+                          <button
+                            className="btn"
+                            onClick={() => {
+                              setSelectItem({
+                                value,
+                                index,
+                              })
+                              setOpenModalEdit(true)
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="btn"
+                            onClick={() => handleDeleteItem(index)}
+                          >
+                            Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {items.map((value, index) => (
-                  <tr key={uuid()}>
-                    <th
-                      className={
-                        choice === index + 1
-                          ? 'bg-green-600 text-white rounded-s-xl'
-                          : ''
-                      }
-                    >
-                      {index + 1}
-                    </th>
-                    <td
-                      className={
-                        choice === index + 1
-                          ? 'bg-green-600 text-white rounded-e-xl'
-                          : ''
-                      }
-                    >
-                      {value}
-                    </td>
-                    <td>
-                      <div className="flex flex-row space-x-6">
-                        <label
-                          htmlFor="modal-edit"
-                          className="btn"
-                          onClick={() => {
-                            setSelectItem({
-                              value,
-                              index,
-                            })
-                            setOpenModalEdit(true)
-                          }}
-                        >
-                          Edit
-                        </label>
-                        <button
-                          className="btn"
-                          onClick={() => handleDeleteItem(index)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
+
         <div className="flex flex-row items-center justify-center space-x-24 mt-10 p-4 rounded-xl">
           <label
             htmlFor="modal-add"
